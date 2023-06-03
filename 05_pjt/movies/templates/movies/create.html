@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% block content %}
+<h1>CREATE</h1>
+<hr />
+
+<form
+  action="{% url 'movies:create' %}"
+  method="POST"
+  enctype="multipart/form-data"
+>
+  {% csrf_token %} {{form.as_p}}
+  <input class="btn btn-primary" type="submit" value="Submit" />
+</form>
+<hr />
+<a class="btn btn-warning text-white" href="{% url 'movies:index' %}">BACK</a>
+{% endblock content %}

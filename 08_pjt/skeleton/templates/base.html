@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <nav class="mb-5">
+      {% if user.is_authenticated %}
+      <br>
+      <h3>Hello, {{ user.username }}
+      <a href="{% url 'accounts:profile' user %}" class="btn btn-outline-success">내 프로필</a>
+      <form style="display:inline-block" action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Logout" class="btn btn-outline-secondary">
+      </form>
+      </h3> 
+      <a href="{% url 'movies:index'%}" class="btn btn-outline-primary mt-2">Movie</a>
+      <a href="{% url 'community:index'%}" class="btn btn-outline-primary mt-2">Community</a>
+      <a href="{% url 'community:create'%}" class="btn btn-outline-primary mt-2">New Review</a>
+      <a href="{% url 'movies:recommended'%}" class="btn btn-outline-primary mt-2">Recommended</a>
+      {% else %}
+      <a href="{% url 'accounts:signup' %}">Signup</a>
+      <a href="{% url 'accounts:login' %}">Login</a>
+      {% endif %}
+    </nav>
+    {% block content %}
+    {% endblock content %}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  {% block script %}
+  {% endblock script %}
+  
+</body>
+</html>

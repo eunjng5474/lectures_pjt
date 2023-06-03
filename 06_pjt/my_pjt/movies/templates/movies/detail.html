@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1><b>DETAIL</b></h1>
+  <hr>
+
+  <div>
+    <h3>{{movie.title}}</h3>
+    <p>작성자: <a href="{% url 'accounts:profile' movie.user.username %}">{{movie.user}}</a></p>
+    <p>내용: </p>
+    <p>{{movie.description}}</p>
+    <br>
+  </div>
+  {% if request.user == movie.user %}
+  <a href="{% url 'movies:update' movie.pk %}">UPDATE</a>
+  <br>
+  <form action="{% url 'movies:delete' movie.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="DELETE">
+  </form>
+  {% endif %}
+  <a href="{% url 'movies:index' %}">BACK</a>
+  <hr>
+
+  <h3><b>댓글 목록</b></h3>
+  <ul>
+    {% for comment in comments %}
+    <li>
+      
+        <form action="{% url 'movies:comments_delete' movie.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          {{comment.content}}
+          {% if request.user == comment.user %}
+            <input type="submit" value="DELETE">
+          {% endif %}
+          <br>
+          <form action="{% url 'movies:comments_create' movie.pk %}" method="POST">
+            {% csrf_token %}
+            {{comment_form}}
+            <input type="submit">
+          </form>
+          {% comment %} {% for recomment in recomments %}
+          {% endfor %}
+          <br>
+          <form action="{% url 'movies:recomments_create' movie.id %}" method="POST">
+            {% csrf_token %}
+            {{recomment_form}}
+            <input type="submit" value="대댓글 작성">  {% endcomment %}
+          {% comment %} </form> {% endcomment %}
+        </form>
+      
+    </li>
+    {% endfor %}
+  </ul>
+  <hr>
+  <br>
+  <form action="{% url 'movies:comments_create' movie.pk %}" method="POST">
+    {% csrf_token %}
+    {{comment_form}}
+    <input type="submit" value="제출">
+  </form>
+
+
+{% endblock content %}

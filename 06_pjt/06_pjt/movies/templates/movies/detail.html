@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block content %}
+<h1>DETAIL</h1>
+<hr />
+
+<div id="movie-content">
+  <h3>{{movie.title}}</h3>
+  <p>{{movie.description}}</p>
+</div>
+{% if user.is_authenticated %}
+<div class="d-flex gap-2">
+  {% if request.user == movie.user %}
+  <a class="btn btn-primary" href="{% url 'movies:update' movie.pk %}"
+    >UPDATE</a
+  >
+  <form name="test" action="{% url 'movies:delete' movie.pk %}" method="POST">
+    {% csrf_token %}
+    <input
+      onclick="btn_delete_event()"
+      type="button"
+      value="DELETE"
+      class="btn btn-danger"
+    />
+  </form>
+  {% endif %}
+  <a class="btn btn-warning text-white" href="{% url 'movies:index' %}">BACK</a>
+</div>
+{% endif %}
+<br><br>
+<h5>Comments</h5>
+<hr>
+{% if comments %}
+  <p><b>{{comments|length}}개의 댓글</b></p>
+{% endif %}
+
+<ul>
+  {% for comment in comments %}
+    <li>
+        <form action="{% url 'movies:comment_delete' movie.pk comment.pk%}" method="POST">
+          {% csrf_token %}
+          {{comment.content}} - {{comment.user}}
+          {% if request.user == comment.user %}
+          <input class="btn btn-danger" type="submit" value="DELETE">
+          {% endif %}
+        </form>
+    </li>
+  {% empty %}
+    <li>댓글이 존재하지 않습니다.</li>
+  {% endfor %}
+</ul>
+
+{% if request.user.is_authenticated %}
+  <form action="{% url 'movies:comment_create' movie.pk %}" method="POST">
+    {% csrf_token %}
+    {{comment_form}}
+    <input class="btn btn-success" type="submit" value="제출">
+  </form>
+{% else %}
+  <a class="btn btn-warning text-white" href="{% url 'accounts:login' %}">댓글을 달기 위해서는 로그인이 필요합니다!</a>
+{% endif %}
+
+<script>
+  function btn_delete_event() {
+    if (confirm("정말 삭제하시겠습니까??") == true) {
+      //확인
+      var form = document.test;
+      form.submit();
+    } else {
+      //취소
+      return;
+    }
+  }
+</script>
+{% endblock content %}

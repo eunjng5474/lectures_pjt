@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+<h1>INDEX</h1>
+<a class="text-decoration-none text-hover" href="{% url 'movies:create' %}">[CREATE]</a>
+<hr />
+
+{% for movie in movies %}
+<h3><a class="text-decoration-none text-hover" href="{% url 'movies:detail' movie.pk %}">{{movie.title}}</a></h3> - 작성자: <a class="text-decoration-none text-hover" href="{% url 'accounts:profile' movie.user.username %}">{{movie.user}}</a>
+{% if request.user.is_authenticated %}
+    <div class="d-flex flex-direction-row">
+        <form class="formlike" action="{% url 'movies:likes' movie.pk %}" method="POST">
+            {% csrf_token %}
+            <div>
+                {% if request.user in movie.like_users.all %}
+                    <input class="btn btn-primary" type="submit" value="좋아요 취소! : {{ movie.like_users.all|length }}">
+                {% else %}
+                    <input class="btn btn-primary" type="submit" value="좋아요! : {{ movie.like_users.all|length }}">
+                {% endif %}
+            </div>
+        </form>
+        <form class="formlike" action="{% url 'movies:dislikes' movie.pk %}" method="POST">
+            {% csrf_token %}
+            <div>
+                {% if request.user in movie.dislike_users.all %}
+                    <input class="btn btn-danger" type="submit" value="싫어요 취소! : {{ movie.dislike_users.all|length }}">
+                {% else %}
+                    <input class="btn btn-danger" type="submit" value="싫어요! : {{ movie.dislike_users.all|length }}">
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endif %}
+{% endfor %} {% endblock content %}

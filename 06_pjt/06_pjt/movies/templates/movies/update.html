@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block content %}
+<h1>UPDATE</h1>
+<hr />
+
+<form
+  name="test"
+  action="{% url 'movies:update' movie.pk %}"
+  method="POST"
+  enctype="multipart.form-data"
+>
+  {% csrf_token %} {{form.as_p}}
+  <button class="btn btn-info text-white" id="reset" type="reset" value="Reset">
+    Reset
+  </button>
+  <input
+    onclick="btn_update_event()"
+    class="btn btn-primary"
+    type="button"
+    value="Submit"
+  />
+</form>
+
+<hr />
+<a class="btn btn-warning text-white" href="{% url 'movies:detail' movie.pk %}"
+  >BACK</a
+>
+<script>
+  function btn_update_event() {
+    if (confirm("수정하시겠습니까??") == true) {
+      //확인
+      var form = document.test;
+      form.submit();
+    } else {
+      //취소
+      return;
+    }
+  }
+</script>
+{% endblock content %}
